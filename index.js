@@ -14,13 +14,13 @@ async function run() {
     const octokit = github.getOctokit(token)
 
     // GET GITHUB CONTEXT
-    const title = `Merge ${branch} to ${targetBranch}`
+    const title = `Merge ${head} to ${base}`
 
     console.log('owner:' + owner)
     console.log('repo:' + repo)
     console.log('title:' + title)
-    console.log('head:' + branch)
-    console.log('base:' + targetBranch)
+    console.log('head:' + head)
+    console.log('base:' + base)
 
     // CREATE PR
     const result = octokit.pulls.create({
@@ -34,7 +34,7 @@ async function run() {
     console.log(result);
 
     // MERGE PR
-    
+
 
 
   } catch (error) {
