@@ -415,7 +415,7 @@ async function run() {
     const title = `Merge ${head} to ${base}`
 
     // LIST PRS for HEAD to BASE
-    const prs = await octokit.pulls.list({
+    const { data } = await octokit.pulls.list({
       owner,
       repo,
       state: 'open',
@@ -423,10 +423,8 @@ async function run() {
       base,
     })
 
-    console.log(prs);
-
     // CREATE PR IF REQUIRED
-    if (prs.length > 0) {
+    if (data.length === 0) {
       const result = await octokit.pulls.create({
         owner,
         repo,
@@ -434,10 +432,9 @@ async function run() {
         head,
         base,
       })
-      const number = result.number
     } else {
       // GRAB THE APPROPRIATE NUMBER FROM EXISTING PR
-      const { number } = prs[0]
+      const { number } = data[0]
     }
 
     // MERGE PR
