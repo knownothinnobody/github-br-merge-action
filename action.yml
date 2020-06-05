@@ -16,6 +16,10 @@ inputs:
     description: 'Branch to merge into'
     required: true
     default: 'master'
+  silent_fail:
+    description: 'Should this action silently fail on a unsuccesful merge?'
+    required: true
+    default: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
