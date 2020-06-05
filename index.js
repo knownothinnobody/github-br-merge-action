@@ -7,14 +7,13 @@ async function run() {
     const token = core.getInput('token')
     const branch = core.getInput('branch')
     const targetBranch = core.getInput('target_branch')
+    const repo =  core.getInput('repository')
+    const owner = repo.split('/')[0]
 
     // SET OCTOKIT
     const octokit = github.getOctokit(token)
 
     // GET GITHUB CONTEXT
-    const context = github.context
-    const owner = context.payload.repository.owner
-    const repo =  github.repository
     const title = `Merge ${branch} to ${targetBranch}`
 
     console.log('owner:' + owner)

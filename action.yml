@@ -1,6 +1,10 @@
 name: 'Merge One Target Branch to Another'
 description: 'A simple action used to take a target branch and merge it to another.'
 inputs:
+  repository:
+    description: 'GitHub Repo'
+    required: true
+    default: ${{ github.repository }}
   token:
     description: 'GitHub Auth Token'
     required: true
