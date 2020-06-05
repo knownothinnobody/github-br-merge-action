@@ -412,8 +412,15 @@ async function run() {
 
     // GET GITHUB CONTEXT
     const context = github.context
+    const owner = context.payload.repository.owner
+    const repo =  github.repository
+    const title = `Merge ${branch} to ${targetBranch}`
 
-    console.log(context);
+    console.log('owner:' + owner)
+    console.log('repo:' + repo)
+    console.log('title:' + title)
+    console.log('head:' + branch)
+    console.log('base:' + targetBranch)
 
     // CREATE PR
     // octokit.pulls.create({
