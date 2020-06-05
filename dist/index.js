@@ -404,8 +404,7 @@ async function run() {
   try {
     // GET INPUTS
     const token = core.getInput('token')
-    const repo =  core.getInput('repository')
-    const owner = repo.split('/')[0]
+    const [owner, repo] = core.getInput('repository').split('/')
     const head =  `${owner}:${core.getInput('branch')}`
     const base = core.getInput('target_branch')
 
