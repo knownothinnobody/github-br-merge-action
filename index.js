@@ -5,8 +5,8 @@ async function run() {
   try {
     // GET INPUTS
     const token = core.getInput('token')
-    const branch = core.getInput('branch')
-    const targetBranch = core.getInput('target_branch')
+    const head = core.getInput('branch')
+    const base = core.getInput('target_branch')
     const repo =  core.getInput('repository')
     const owner = repo.split('/')[0]
 
@@ -23,9 +23,18 @@ async function run() {
     console.log('base:' + targetBranch)
 
     // CREATE PR
-    // octokit.pulls.create({
+    const result = octokit.pulls.create({
+      owner,
+      repo,
+      title,
+      head,
+      base,
+    })
 
-    // })
+    console.log(result);
+
+    // MERGE PR
+    
 
 
   } catch (error) {
