@@ -5,25 +5,34 @@ async function run() {
   try {
     // GET INPUTS
     const token = core.getInput('token')
-    const branch = core.getInput('branch')
-    const targetBranch = core.getInput('target_branch')
+    const [owner, repo] = core.getInput('repository').split('/')
+    const head =  `${owner}:${core.getInput('branch')}`
+    const base = core.getInput('target_branch')
 
     // SET OCTOKIT
     const octokit = github.getOctokit(token)
 
     // GET GITHUB CONTEXT
-    const context = github.context
-
-    console.log(context);
+    const title = `Merge ${head} to ${base}`
 
     // CREATE PR
-    // octokit.pulls.create({
+    const { number } = await octokit.pulls.create({
+      owner,
+      repo,
+      title,
+      head,
+      base,
+    })
 
-    // })
-
-
+    // MERGE PR
+    await octokit.pulls.merge({
+      owner,
+      repo,
+      pull_number: number,
+    })
+    
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(error);
   }
 }
 
