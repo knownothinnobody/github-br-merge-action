@@ -432,6 +432,7 @@ async function run() {
         head,
         base,
       })
+      console.log(result);
     } else {
       // GRAB THE APPROPRIATE NUMBER FROM EXISTING PR
       const { number } = data[0]
