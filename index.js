@@ -15,21 +15,43 @@ async function run() {
     // GET GITHUB CONTEXT
     const title = `Merge ${head} to ${base}`
 
-    // CREATE PR
-    const { number } = await octokit.pulls.create({
+    // LIST PRS for HEAD to BASE
+    const prs = await octokit.pulls.list({
       owner,
       repo,
-      title,
+      state: 'open',
       head,
       base,
     })
 
+    // CREATE PR IF REQUIRED
+    if (prs.length > 0) {
+      const { number } = await octokit.pulls.create({
+        owner,
+        repo,
+        title,
+        head,
+        base,
+      })
+    } else {
+      // GRAB THE APPROPRIATE NUMBER FROM EXISTING PR
+      const { number } = prs[0]
+    }
+
     // MERGE PR
-    await octokit.pulls.merge({
-      owner,
-      repo,
-      pull_number: number,
-    })
+    try {
+      octokit.pulls.merge({
+        owner,
+        repo,
+        pull_number: number,
+      })
+    } catch(reason) {
+      if (reason.message !== "No commits between master and dev") {
+        throw Error(reason)
+      } else {
+        console.log("There is nothing to merge at the moment.")
+      }
+    }
     
   } catch (error) {
     core.setFailed(error);

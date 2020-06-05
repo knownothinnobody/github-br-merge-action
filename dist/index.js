@@ -414,29 +414,44 @@ async function run() {
     // GET GITHUB CONTEXT
     const title = `Merge ${head} to ${base}`
 
-    console.log('owner:' + owner)
-    console.log('repo:' + repo)
-    console.log('title:' + title)
-    console.log('head:' + head)
-    console.log('base:' + base)
-
-    // CREATE PR
-    octokit.pulls.create({
+    // LIST PRS for HEAD to BASE
+    const prs = await octokit.pulls.list({
       owner,
       repo,
-      title,
+      state: 'open',
       head,
       base,
-    }).catch(reason => {
-      console.log(reason)
     })
 
-    console.log(result);
+    // CREATE PR IF REQUIRED
+    if (prs.length > 0) {
+      const { number } = await octokit.pulls.create({
+        owner,
+        repo,
+        title,
+        head,
+        base,
+      })
+    } else {
+      // GRAB THE APPROPRIATE NUMBER FROM EXISTING PR
+      const { number } = prs[0]
+    }
 
     // MERGE PR
-
-
-
+    try {
+      octokit.pulls.merge({
+        owner,
+        repo,
+        pull_number: number,
+      })
+    } catch(reason) {
+      if (reason.message !== "No commits between master and dev") {
+        throw Error(reason)
+      } else {
+        console.log("There is nothing to merge at the moment.")
+      }
+    }
+    
   } catch (error) {
     core.setFailed(error);
   }
