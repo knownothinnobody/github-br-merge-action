@@ -33,7 +33,7 @@ async function run() {
         head,
         base,
       })
-      console.log(result);
+      const { number } = result.data
     } else {
       // GRAB THE APPROPRIATE NUMBER FROM EXISTING PR
       const { number } = data[0]
