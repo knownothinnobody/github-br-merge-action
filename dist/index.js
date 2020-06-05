@@ -423,15 +423,18 @@ async function run() {
       base,
     })
 
+    console.log(prs);
+
     // CREATE PR IF REQUIRED
     if (prs.length > 0) {
-      const { number } = await octokit.pulls.create({
+      const result = await octokit.pulls.create({
         owner,
         repo,
         title,
         head,
         base,
       })
+      const number = result.number
     } else {
       // GRAB THE APPROPRIATE NUMBER FROM EXISTING PR
       const { number } = prs[0]
