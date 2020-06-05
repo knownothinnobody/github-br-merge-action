@@ -422,7 +422,7 @@ async function run() {
     console.log('base:' + base)
 
     // CREATE PR
-    const result = octokit.pulls.create({
+    const result = await octokit.pulls.create({
       owner,
       repo,
       title,
