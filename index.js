@@ -35,9 +35,7 @@ async function run() {
       head,
       base,
     })
-
-    console.log(result.data);
-    console.log(result.data.number);
+    
     const pull_number =  result.data.number
 
     // MERGE PR
