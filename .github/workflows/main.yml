@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Dependencies
         if: steps.cache-node-modules.outputs.cache-hit != true
-        run: NODE_ENV=development npm i
+        run: npm i
 
       - uses: knownothinnobody/github-br-merge-action@v1.0.0
         with:
