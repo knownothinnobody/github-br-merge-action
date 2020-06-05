@@ -404,10 +404,10 @@ async function run() {
   try {
     // GET INPUTS
     const token = core.getInput('token')
-    const head = core.getInput('branch')
-    const base = core.getInput('target_branch')
     const repo =  core.getInput('repository')
     const owner = repo.split('/')[0]
+    const head =  `${owner}:${core.getInput('branch')}`
+    const base = core.getInput('target_branch')
 
     // SET OCTOKIT
     const octokit = github.getOctokit(token)
