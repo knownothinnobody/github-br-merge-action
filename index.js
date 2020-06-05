@@ -8,6 +8,7 @@ async function run() {
     const [owner, repo] = core.getInput('repository').split('/')
     const head =  `${owner}:${core.getInput('branch')}`
     const base = core.getInput('target_branch')
+    const silentFail = core.getInput('silent_fail')
 
     // SET OCTOKIT
     const octokit = github.getOctokit(token)
@@ -24,38 +25,38 @@ async function run() {
       base,
     })
 
+    if (data.length !== 0) return
+
     // CREATE PR IF REQUIRED
-    if (data.length === 0) {
-      const result = await octokit.pulls.create({
-        owner,
-        repo,
-        title,
-        head,
-        base,
-      })
-      const { number } = result.data
-    } else {
-      // GRAB THE APPROPRIATE NUMBER FROM EXISTING PR
-      const { number } = data[0]
-    }
+    const result = await octokit.pulls.create({
+      owner,
+      repo,
+      title,
+      head,
+      base,
+    })
+
+    const pull_number =  result.data.number
 
     // MERGE PR
     try {
-      octokit.pulls.merge({
+      await octokit.pulls.merge({
         owner,
         repo,
-        pull_number: number,
+        pull_number,
       })
-    } catch(reason) {
-      if (reason.message !== "No commits between master and dev") {
-        throw Error(reason)
-      } else {
-        console.log("There is nothing to merge at the moment.")
-      }
+    } catch {
+      await octokit.pulls.update({
+        owner,
+        repo,
+        pull_number,
+        state: 'closed',
+      })
+      if (!silentFail) throw new Error('unable to merge')
     }
     
   } catch (error) {
-    core.setFailed(error);
+    core.setFailed(error.message);
   }
 }
 
