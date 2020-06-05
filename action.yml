@@ -1,0 +1,17 @@
+name: 'Merge One Target Branch to Another'
+description: 'A simple action used to take a target branch and merge it to another.'
+inputs:
+  token:
+    description: 'GitHub Auth Token'
+    required: true
+  branch:
+    description: 'Branch to be merged'
+    required: true
+    default: 'dev'
+  target_branch:
+    description: 'Branch to merge into'
+    required: true
+    default: 'master'
+runs:
+  using: 'node12'
+  main: 'index.js'
